@@ -5,7 +5,8 @@ var hashControl = new HashControl();
 if (hasWebGL()) {
   // use Tangram to draw tiles when there is WebGL available on the browser
   var layer = Tangram.leafletLayer({
-    scene: 'https://cdn.rawgit.com/tangrams/refill-style/gh-pages/refill-style.yaml',
+    //scene: 'https://cdn.rawgit.com/mapzen-data/te-bike-lrm-mapzen/gh-pages/map/te-bike-map.yaml',
+    scene: 'https://raw.githubusercontent.com/mapzen-data/te-bike-lrm-mapzen/gh-pages/map/te-bike-map.yaml',
     attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
   });
   layer.addTo(map);
@@ -32,7 +33,7 @@ var routingData = {
     L.latLng(37.752, -122.418),
     L.latLng(37.779, -122.391)
   ],
-  costing: 'auto'
+  costing: 'bicycle'
 }
 
 
@@ -83,13 +84,13 @@ L.Routing.errorControl(control).addTo(map);
 
 // Adding easy button for UI
 
-L.easyButton('btn-auto', function(btn, map){
-  control.getRouter().options.costing = 'auto';
+L.easyButton('btn-bicycle', function(btn, map){
+  control.getRouter().options.costing = 'bicycle';
   control.route();
 }).addTo(map);
 
-L.easyButton('btn-bicycle', function(btn, map){
-  control.getRouter().options.costing = 'bicycle';
+L.easyButton('btn-auto', function(btn, map){
+  control.getRouter().options.costing = 'auto';
   control.route();
 }).addTo(map);
 
