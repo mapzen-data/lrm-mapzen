@@ -4,12 +4,12 @@ sources:
     osm: 
         type: TopoJSON
         url: //vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-JUsa0Gc
-        rasters: [normals]
+#        rasters: [normals]
         max_zoom: 16
-    normals:
-        type: Raster
-        url: https://terrain-preview.mapzen.com/normal/{z}/{x}/{y}.png
-        max_zoom: 14
+#    normals:
+#        type: Raster
+#        url: https://terrain-preview.mapzen.com/normal/{z}/{x}/{y}.png
+#        max_zoom: 14
 
 styles:
     casing_left:
