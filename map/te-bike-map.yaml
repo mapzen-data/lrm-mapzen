@@ -72,7 +72,6 @@ styles:
         raster: normal
         shaders:
             uniforms:
-                # u_envmap: images/relief-shading-environment-map.jpg
                 u_envmap: images/draw-test8.jpg
                 u_scale: 3. # higher values are more exaggerated
                 u_scale_end: 0.001
