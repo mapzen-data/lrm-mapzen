@@ -447,7 +447,7 @@ layers:
                 size: [[13, 12px], [16, 16px], [19, 20px]]
                 interactive: true
                 order: 41
-                color: aqua
+                color: white
                 #visible: function() { if( feature.min_zoom <= $zoom ) { return true; } else { return false; } }
                 sprite: function() { return feature.kind }
             text-blend-order:
@@ -477,10 +477,15 @@ layers:
             draw: 
                 icons:
                     sprite: bike-shop
+        bike-repair-station:
+            filter: { kind: [bicycle_repair_station] }
+            draw:
+                icons:
+                    sprite: bike-shop
         bicycle-parking:
             filter: { kind: [bicycle_parking] }
             draw:   { icons: { sprite: bicycle-parking } }
-            
+
     earth:
         data: { source: osm}
         draw:
@@ -489,7 +494,7 @@ layers:
                 color: [1.0, 1.0, 1.0]
             polygons:
                 visible: false
-                
+
     landuse:
         data: { source: osm}
         draw:
