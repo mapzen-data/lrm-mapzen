@@ -71,9 +71,9 @@ var control = L.Routing.control({
   routeLine: function (route, options) { return L.Routing.mapzenLine(route, options); },
   waypoints: routingData.waypoints,
   // You can get your own Mapzen turn-by-turn & search API key from the Mapzen developer portal (https://mapzen.com/developers/)
-  geocoder: L.Control.Geocoder.mapzen('search-RH8pVLv'),
+  geocoder: L.Control.Geocoder.mapzen('search-DqwJuRM'),
   reverseWaypoints: true,
-  router: L.Routing.mapzen('valhalla-PVA4Y8g', {costing: routingData.costing}),
+  router: L.Routing.mapzen('valhalla-SxUZCXy', {costing: routingData.costing}),
   collapsible: true,
   show: (map.getSize().x > 768)? true: false,
   formatter: new L.Routing.mapzenFormatter(),
