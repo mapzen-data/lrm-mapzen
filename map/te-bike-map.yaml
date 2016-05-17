@@ -229,6 +229,7 @@ layers:
             draw:
                 text-blend-order:
                     priority: 58
+                    interactive: true
                     text_source: |
                         function() {
                             if( (feature.highway == 'cycleway' && feature.cycleway == 'sidepath' || feature.cycleway == 'segregated') || 
@@ -241,10 +242,10 @@ layers:
                                 return "Designated footway";
                             } else if( feature.highway == "steps" && (feature.bicycle == 'designated' || feature.bicycle == 'yes') ) { 
                                 return "Designated steps";
+                            } else if( feature.highway == 'track' && (feature.bicycle == 'designated' || feature.bicycle == 'yes') ) {
+                                return "Designated track";
                             } else if( feature.kind == 'path' && (feature.bicycle == 'designated' || feature.bicycle == 'yes') ) {
                                 return "Designated path"; 
-                            } else if( feature.kind == 'track' && (feature.bicycle == 'designated' || feature.bicycle == 'yes') ) {
-                                return "Designated track";
                             } else if( feature.cycleway && feature.oneway == 'yes' ) {
                                 return feature.cycleway + " (implied right)";
                             } else if( feature.cycleway ) {
@@ -275,11 +276,13 @@ layers:
                         width: [[15, 0.5px],[16, 1.5px],[17, 1.5px],[18, 2.5px],[19, 1m]]
                 casing_left:
                     visible: false
+                    interactive: true
                     order: 486
                     color: [0.460,0.640,1.000]
                     width: [[15, 0.5px],[16, 5.5px],[17, 10px],[18, 9m],[19, 8m]]
                 casing_right:
                     visible: false
+                    interactive: true
                     order: 486
                     color: white
                     width: [[15, 0.5px],[16, 6px],[17, 10px],[18, 9m],[19, 8m]]
@@ -433,7 +436,7 @@ layers:
     bike-realted-icons:
         data: { source: osm, layer: [pois,landuse] }
         filter: 
-            kind: [bicycle, bicycle_rental, bicycle_rental_station, bicycle_parking, cycle_barrier, bicycle_junction]
+            kind: [bicycle, bicycle_rental, bicycle_rental_station, bicycle_parking, cycle_barrier, bicycle_junction, bicycle_repair_station]
             any:
                 - area: false
                   all:
@@ -451,6 +454,7 @@ layers:
                 sprite: function() { return feature.kind }
             text-blend-order:
                 order: 42
+                interactive: true
                 #visible: function() { if( feature.min_zoom <= $zoom ) { return true; } else { return false; } }
                 move_into_tile: false # preserves text alignment w/icons in JS
                 anchor: bottom
@@ -500,8 +504,10 @@ layers:
             terrain_more:
                 order: function() { return feature.sort_key; }
                 color: [1.0, 1.0, 1.0]
+                interactive: false
             polygons:
                 visible: false
+                interactive: false
         tier1:
             national_park:
                 draw:
@@ -730,3 +736,26 @@ layers:
             draw:
                 dots:
                     visible: false
+
+    buildings:
+        interactive:
+            draw: { polygons: { interactive: false } }
+
+    building-labels:
+        draw:
+            text-blend-order:
+                interactive: false
+
+    address-labels:
+        draw:
+            text-blend-order:
+                interactive: false
+
+    water:
+        draw:
+            waves:
+                interactive: false
+        river:
+            draw:
+                stream-waves:
+                    interactive: false
