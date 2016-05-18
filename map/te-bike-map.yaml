@@ -186,13 +186,17 @@ layers:
         cycleway-path-early:
                 filter: 
                     all:
-                        - highway: [cycleway, track, path, footway, steps]
                         - $zoom: { max: 16 }
+                        - any:
+                            - highway: [cycleway, track, path, footway, steps]
+                            - cycleway: [sidepath]
+                            - cycleway_left: [sidepath]
+                            - cycleway_right: [sidepath]
                         - not:
                             any:
-                                - cycleway: [lane, track, opposite, opposite_lane, opposite_track, sidepath]
-                                - cycleway_left: [lane, track, opposite, opposite_lane, opposite_track, sidepath]
-                                - cycleway_right: [lane, track, opposite, opposite_lane, opposite_track, sidepath]
+                                - cycleway: [lane, track, opposite, opposite_lane, opposite_track]
+                                - cycleway_left: [lane, track, opposite, opposite_lane, opposite_track]
+                                - cycleway_right: [lane, track, opposite, opposite_lane, opposite_track]
                 draw:
                     lines:
                         color: '#99ce9c'
@@ -211,15 +215,24 @@ layers:
                         draw:
                             lines:
                                 color: '#b39654'
+                sidepath-z15:
+                    filter: 
+                        - cycleway: [sidepath]
+                        - cycleway_left: [sidepath]
+                        - cycleway_right: [sidepath]
+                    draw:
+                        lines:
+                            width: [[11, 1px], [12, 1.2px], [13, 1.0px],[14,1.2px],[15,1.5px],[16,0.01px]]
+
         separated_bike_lanes_tracks_etc-early:
             filter: 
                  all:
                     - not: { highway: [cycleway, track, path, footway, steps] }
                     - $zoom: [14,15]
                  any:
-                    - cycleway: [lane, track, opposite, opposite_lane, opposite_track, sidepath]
-                    - cycleway_left: [lane, track, opposite, opposite_lane, opposite_track, sidepath]
-                    - cycleway_right: [lane, track, opposite, opposite_lane, opposite_track, sidepath]
+                    - cycleway: [lane, track, opposite, opposite_lane, opposite_track]
+                    - cycleway_left: [lane, track, opposite, opposite_lane, opposite_track]
+                    - cycleway_right: [lane, track, opposite, opposite_lane, opposite_track]
             draw:
                 lines:
                     color: '#3b69fe'
@@ -300,7 +313,7 @@ layers:
                         - { highway: footway, bicycle: [designated, yes] }
                         - { highway: steps, bicycle: [designated, yes] }
                     not:
-                        - { highway: footway, bicycle: yes, segregated: yes }
+                        - { highway: footway, bicycle: yes, segregated: yes, cycleway: sidepath }
                 draw:
                     lines:
                         order: 486
@@ -426,13 +439,14 @@ layers:
                 draw:
                     lines:
                         order: 491
-                        width: [[15,0px],[16,1.2px],[17,2.5px],[18,2.5m]]
-                        color: [0.460,0.640,1.000]  #blue
+                        width: [[15,0px],[16,0.6px],[17,2.5px],[18,2.5m]]
+                        color: '#afdcb2'
                         outline:
-                            width: 0px
+                            color: [[16,'#6abe6c'],[17,'#5cb65e']]
+                            width: [[15, 0.5px],[16, 1.0px],[17, 1px],[18, 2px],[19, 0.7m]]
                     text-blend-order:
                         font:
-                            fill: blue
+                            fill: green
     bike-realted-icons:
         data: { source: osm, layer: [pois,landuse] }
         filter: 
@@ -488,6 +502,10 @@ layers:
         bicycle-parking:
             filter: { kind: [bicycle_parking] }
             draw:   { icons: { sprite: bicycle-parking } }
+        cycle_barrier:
+            filter: { kind: [cycle_barrier] }
+            draw:   { icons: { sprite: generic, color: black } }
+            
 
     earth:
         data: { source: osm}
