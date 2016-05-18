@@ -378,6 +378,13 @@ control.on('routingstart', function () {
   hashControl.set(newHashData);
 })
 
+/*
+// show where waypoints after route updates
+control.on('routesfound', function () {
+  map.fitBounds(routingData.waypoints);
+})
+*/
+
 // to show where waypoints are even if there is no routing data
 control.on('routingerror', function () {
   map.fitBounds(routingData.waypoints);
