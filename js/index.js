@@ -20,6 +20,11 @@ if (hasWebGL()) {
   window.scene = scene;
   var latlng = {};
   var popup = document.getElementById('popup'); // click-popup
+  
+  function killPopup() {
+    picking = false;
+    popup.style.visibility = 'hidden';
+  }
 
   // Feature selection
   function initFeatureSelection () {
