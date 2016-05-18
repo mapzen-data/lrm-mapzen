@@ -213,6 +213,9 @@ if (hasWebGL()) {
 
     var timer;
 
+    // disable the popup with the escape key
+    key_nc('esc', function(){ popup.style.visibility = 'hidden'; });
+
     map.getContainer().addEventListener('click', function (event) {
       //console.log( 'click was had' );
       if( timer ) { clearTimeout( timer ); timer = null; }
