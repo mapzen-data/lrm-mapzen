@@ -20,7 +20,7 @@ if (hasWebGL()) {
   window.scene = scene;
   var latlng = {};
   var popup = document.getElementById('popup'); // click-popup
-  
+
   function killPopup() {
     picking = false;
     popup.style.visibility = 'hidden';
@@ -261,7 +261,7 @@ if (hasWebGL()) {
   }
 
   window.addEventListener('load', function () {
-    // If not embedded in a blog post, enable the mouse scroll wheel zoom 
+    // If not embedded in a blog post, enable the mouse scroll wheel zoom
     if (!inIframe()) {
       map.scrollWheelZoom.enable();
     }
@@ -304,7 +304,6 @@ var routingData = {
 var hashVal = hashControl.read()
 if( hashVal !== null) {
   var wps = [];
-  console.log(hashVal);
   for(var key in hashVal) {
     if(key.startsWith('point')) {
       var idx = parseInt(key.charAt(5));
@@ -330,7 +329,6 @@ if( hashVal !== null) {
   })
 }
 
-
 var control = L.Routing.control({
   routeLine: function (route, options) { return L.Routing.mapzenLine(route, options); },
   waypoints: routingData.waypoints,
@@ -338,6 +336,8 @@ var control = L.Routing.control({
   geocoder: L.Control.Geocoder.mapzen('search-DqwJuRM'),
   reverseWaypoints: true,
   router: L.Routing.mapzen('valhalla-SxUZCXy', {costing: routingData.costing}),
+  collapsible: true,
+  show: (map.getSize().x > 768)? true: false,
   formatter: new L.Routing.mapzenFormatter(),
   summaryTemplate:'<div class="start">{name}</div><div class="info {costing}">{distance}, {time}</div>'
 }).addTo(map);
@@ -392,5 +392,9 @@ control.on('routesfound', function () {
 
 // to show where waypoints are even if there is no routing data
 control.on('routingerror', function () {
-  map.fitBounds(routingData.waypoints);
+  var waypoints = control.getWaypoints();
+  map.fitBounds([
+    waypoints[0].latLng,
+    waypoints[waypoints.length-1].latLng
+  ]);
 })
