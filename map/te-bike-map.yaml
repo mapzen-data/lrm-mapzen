@@ -171,7 +171,10 @@ layers:
                 - $zoom: { min: 11 }
             any:
                 - is_bicycle_related: true
+                # 20160520 nvkelso: this is a hack as we're not calculating is_bicycle_related inclusive of bicycle=*
                 - bicycle: [yes, designated]
+                # 20160520 nvkelso: this is a hack as we don't currently export bicycle=* on pedestrian ways
+                - highway: pedestrian
         draw:
             lines:
                 interactive: true
@@ -200,23 +203,23 @@ layers:
                     all:
                         - $zoom: { max: 16 }
                         - any:
-                            - highway: [cycleway, track, path, footway, steps]
-                            - cycleway: [sidepath]
-                            - cycleway_left: [sidepath]
-                            - cycleway_right: [sidepath]
+                            - highway: [cycleway, track, path, pedestrian, footway, steps]
+                            - cycleway: [sidepath, track, opposite_track]
+                            - cycleway_left: [sidepath, track, opposite_track]
+                            - cycleway_right: [sidepath, track, opposite_track]
                         - not:
                             any:
-                                - cycleway: [lane, track, opposite, opposite_lane, opposite_track]
-                                - cycleway_left: [lane, track, opposite, opposite_lane, opposite_track]
-                                - cycleway_right: [lane, track, opposite, opposite_lane, opposite_track]
+                                - cycleway: [lane, opposite, opposite_lane]
+                                - cycleway_left: [lane, opposite, opposite_lane]
+                                - cycleway_right: [lane, opposite, opposite_lane]
                 draw:
                     lines:
-                        color: '#99ce9c'
-                early-z15:
-                    filter: { $zoom: [14,15] }
-                    draw:
-                        lines:
-                            color: '#54b356'
+                        color: '#02c014' #'#99ce9c'
+#                early-z15:
+#                    filter: { $zoom: [14,15] }
+#                    draw:
+#                        lines:
+#                            color: '#54b356'
                 track:
                     filter: { highway: track }
                     draw:
@@ -235,16 +238,28 @@ layers:
                     draw:
                         lines:
                             width: [[11, 1px], [12, 1.2px], [13, 1.0px],[14,1.2px],[15,1.5px],[16,0.01px]]
-
-        separated_bike_lanes_tracks_etc-early:
+        tracks-early:
             filter: 
                  all:
-                    - not: { highway: [cycleway, track, path, footway, steps] }
+                    - not: { highway: [cycleway, track, path, pedestrian, footway, steps] }
                     - $zoom: [14,15]
                  any:
-                    - cycleway: [lane, track, opposite, opposite_lane, opposite_track]
-                    - cycleway_left: [lane, track, opposite, opposite_lane, opposite_track]
-                    - cycleway_right: [lane, track, opposite, opposite_lane, opposite_track]
+                    - cycleway: [track, opposite_track]
+                    - cycleway_left: [track, opposite_track]
+                    - cycleway_right: [track, opposite_track]
+            draw:
+                lines:
+                    width: 2.2px
+        separated_bike_lanes-etc-early:
+            filter: 
+                 all:
+                    - not: { highway: [cycleway, track, path, pedestrian, footway, steps] }
+                    - $zoom: [14,15]
+                 any:
+                    - cycleway: [lane, opposite, opposite_lane]
+                    - cycleway_left: [lane, opposite, opposite_lane]
+                    - cycleway_right: [lane, opposite, opposite_lane]
+                    - bicycle: [yes, designated]
             draw:
                 lines:
                     color: '#3b69fe'
@@ -269,6 +284,8 @@ layers:
                                 return "Designated steps";
                             } else if( feature.highway == 'track' && (feature.bicycle == 'designated' || feature.bicycle == 'yes') ) {
                                 return "Designated track";
+                            } else if( feature.highway == 'pedestrian' ) {
+                                return "Designated pedestrian"; 
                             } else if( feature.kind == 'path' && (feature.bicycle == 'designated' || feature.bicycle == 'yes') ) {
                                 return "Designated path"; 
                             } else if( feature.cycleway && feature.oneway == 'yes' ) {
@@ -324,17 +341,24 @@ layers:
                         - { highway: track, bicycle: [designated, yes] }
                         - { highway: footway, bicycle: [designated, yes] }
                         - { highway: steps, bicycle: [designated, yes] }
+                        - { cycleway: [track, opposite_track] }
+                        - { highway: pedestrian }
                     not:
-                        - { highway: footway, bicycle: yes, segregated: yes, cycleway: sidepath }
+                        - { highway: footway, bicycle: yes, segregated: yes, cycleway: [sidepath] }
                 draw:
                     lines:
                         order: 486
-                        color: '#99ce9c'
+                        color: '#02c014' #'#99ce9c'
                         outline:
                             color: [[16,'#54b356'],[17,'#3ba53d'],[18,green]]
                     text-blend-order:
                         font:
                             fill: green
+                cycleway_tracks:
+                    filter: { cycleway: [track, opposite_track], oneway: false }
+                    draw:
+                        lines:
+                            color: '#afdcb2'
                 footway_steps:
                     filter: { highway: [footway, steps] }
                     draw:
@@ -367,12 +391,14 @@ layers:
                                 fill: '#826219'
             separated_bike_lanes_tracks_etc:
                 filter: 
-                     all:
-                        - not: { highway: [cycleway, track, path, footway, steps] }
+#                     all:
+#                        - not: { highway: [cycleway, track, path, pedestrian, footway, steps] }
                      any:
-                        - cycleway: [lane, track, opposite, opposite_lane, opposite_track]
+                        - { oneway: yes, highway: [cycleway, track, path, pedestrian, footway, steps] }
+                        - { oneway: yes, cycleway: [lane, track, opposite, opposite_lane, opposite_track] }
                         - cycleway_left: [lane, track, opposite, opposite_lane, opposite_track]
                         - cycleway_right: [lane, track, opposite, opposite_lane, opposite_track]
+                        - { bicycle: [yes, designated], not: { highway: [path, cycleway] } }
                 draw:
                     lines:
                         outline:
@@ -387,9 +413,8 @@ layers:
                         any:
                             - cycleway_left: true
                             - cycleway_right: true
-                            - all:
-                                - cycleway: true
-                                - oneway: yes
+                            - { oneway: yes, cycleway: true }
+                            - { oneway: yes, highway: true }
                     draw:
                         lines:
                             color: [[16,'#dbe6f9'], [17,'#dbe6f9']]
@@ -427,6 +452,70 @@ layers:
                                 color: '#fffbca'
                             casing_right:
                                 color: [0.460,0.640,1.000]
+                    cycle_track:
+                        filter:
+                             any:
+                                - { highway: true, cycleway: [track, opposite_track] }
+                                - cycleway_left: [track, opposite_track]
+                                - cycleway_right: [track, opposite_track]
+                                - highway: [cycleway, path, pedestrian, footway, steps]
+                        draw:
+                            lines:
+                                color: '#afdcb2'
+                                order: 492
+                            casing_right:
+                                color: '#02c014' #[[16,'#54b356'],[17,'#3ba53d'],[18,green]]
+                            text-blend-order:
+                                font:
+                                    fill: green
+                        cycleway_left:
+                            filter: 
+                                - cycleway_left: true
+                            draw:
+                                casing_left:
+                                    color: '#02c014' #[[16,'#54b356'],[17,'#3ba53d'],[18,green]]
+                                casing_right:
+                                    color: white
+                        # sometimes there are also lanes on the other side
+                        cycleway_left_lane:
+                            filter:
+                                - cycleway_left: [lane, opposite, opposite_lane]
+                            draw:
+                                casing_left:
+                                    color: blue
+                                casing_right:
+                                    color: '#02c014'
+                    track_track:
+                        filter:
+                             any:
+                                - highway: [track]
+                        draw:
+                            lines:
+                                color: '#afdcb2'
+                            casing_right:
+                                color: brown #'#00c445' #[[16,'#54b356'],[17,'#3ba53d'],[18,green]]
+                            text-blend-order:
+                                font:
+                                    fill: brown
+                        cycleway_left:
+                            filter: 
+                                - cycleway_left: true
+                            draw:
+                                casing_left:
+                                    color: brown #'#00c445' #[[16,'#54b356'],[17,'#3ba53d'],[18,green]]
+                                casing_right:
+                                    color: white
+
+            lane:
+                filter:
+                     any:
+                        - cycleway: [lane, opposite, opposite_lane]
+                        - cycleway_left: [lane, opposite, opposite_lane]
+                        - cycleway_right: [lane, opposite, opposite_lane]
+                draw:
+                    lines:
+                        outline:
+                            color: blue
             shared_lane:
                 filter:
                      any:
