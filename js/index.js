@@ -337,6 +337,7 @@ var control = L.Routing.control({
   reverseWaypoints: true,
   router: L.Routing.mapzen('valhalla-SxUZCXy', {costing: routingData.costing}),
   collapsible: true,
+  lineOptions: {styles: [{color: 'red', opacity: 0.8, weight: 8, dashArray: '7,12'}]},
   show: (map.getSize().x > 768)? true: false,
   formatter: new L.Routing.mapzenFormatter(),
   summaryTemplate:'<div class="start">{name}</div><div class="info {costing}">{distance}, {time}</div>'
