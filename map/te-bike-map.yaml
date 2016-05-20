@@ -168,7 +168,7 @@ layers:
         data: { source: osm, layer: roads }
         filter: 
             all:
-                - $zoom: { min: 12 }
+                - $zoom: { min: 11 }
             any:
                 - is_bicycle_related: true
                 - bicycle: [yes, designated]
@@ -183,6 +183,18 @@ layers:
                     order: 486
                     color: [0.182,0.593,0.730]
                     width: [[15, 0px],[16, 0.5px],[17, 1px]]
+#        early:
+#            filter:
+#                all:
+#                    - $zoom: [11]
+#                    - bicycle_network: [lcn]
+#                    - not:
+#                        - kind: path
+#            draw:
+#                lines:
+#                    visible: false
+#                    #color: red
+
         cycleway-path-early:
                 filter: 
                     all:
